@@ -31,17 +31,15 @@ import nextstep.signup.R
 import nextstep.signup.ui.component.HeaderText
 import nextstep.signup.ui.component.SignUpInformationTextField
 import nextstep.signup.ui.component.SubmitButton
-import nextstep.signup.ui.model.Email
-import nextstep.signup.ui.model.Password
-import nextstep.signup.ui.model.PasswordConfirm
 import nextstep.signup.ui.model.SignUp
-import nextstep.signup.ui.model.UserName
 
 @Composable
 fun SignUpScreen() {
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val snackbarMessage = stringResource(R.string.sign_up_completed)
+
+    var signUp by rememberSaveable { mutableStateOf(SignUp()) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -55,19 +53,6 @@ fun SignUpScreen() {
                     .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            var userName by rememberSaveable { mutableStateOf(UserName()) }
-            var email by rememberSaveable { mutableStateOf(Email()) }
-            var password by rememberSaveable { mutableStateOf(Password()) }
-            var passwordConfirm by rememberSaveable { mutableStateOf(PasswordConfirm()) }
-
-            val signUp =
-                SignUp(
-                    userName,
-                    email,
-                    passwordConfirm,
-                    passwordConfirm,
-                )
-
             Spacer(modifier = Modifier.padding(top = 84.dp))
 
             HeaderText(
@@ -92,12 +77,12 @@ fun SignUpScreen() {
                     modifier =
                         Modifier.fillMaxWidth(),
                     label = stringResource(R.string.username_label),
-                    value = userName.text,
+                    value = signUp.userName.text,
                     onValueChange = { value ->
-                        userName = userName.copy(text = value)
+                        signUp = signUp.copy(userName = signUp.userName.copy(text = value))
                     },
-                    isValid = userName.isValid(),
-                    errorMessage = userName.errorMessage(),
+                    isValid = signUp.userName.isValid(),
+                    errorMessage = signUp.userName.errorMessage(),
                 )
 
                 SignUpInformationTextField(
@@ -106,12 +91,12 @@ fun SignUpScreen() {
                             .fillMaxWidth()
                             .padding(top = 36.dp),
                     label = stringResource(R.string.email_label),
-                    value = email.text,
+                    value = signUp.email.text,
                     onValueChange = { value ->
-                        email = email.copy(text = value)
+                        signUp = signUp.copy(email = signUp.email.copy(text = value))
                     },
-                    isValid = email.isValid(),
-                    errorMessage = email.errorMessage(),
+                    isValid = signUp.email.isValid(),
+                    errorMessage = signUp.email.errorMessage(),
                     keyboardType = KeyboardType.Email,
                 )
 
@@ -121,13 +106,19 @@ fun SignUpScreen() {
                             .fillMaxWidth()
                             .padding(top = 36.dp),
                     label = stringResource(R.string.password_label),
-                    value = password.text,
+                    value = signUp.password.text,
                     onValueChange = { value ->
-                        password = password.copy(text = value)
-                        passwordConfirm = passwordConfirm.copy(passwordText = value)
+                        signUp = signUp.copy(password = signUp.password.copy(text = value))
+                        signUp =
+                            signUp.copy(
+                                passwordConfirm =
+                                    signUp.passwordConfirm.copy(
+                                        passwordText = value,
+                                    ),
+                            )
                     },
-                    isValid = password.isValid(),
-                    errorMessage = password.errorMessage(),
+                    isValid = signUp.password.isValid(),
+                    errorMessage = signUp.password.errorMessage(),
                     keyboardType = KeyboardType.Password,
                     visualTransformation = PasswordVisualTransformation(),
                 )
@@ -138,12 +129,18 @@ fun SignUpScreen() {
                             .fillMaxWidth()
                             .padding(top = 36.dp),
                     label = stringResource(R.string.password_confirm_label),
-                    value = passwordConfirm.text,
+                    value = signUp.passwordConfirm.text,
                     onValueChange = { value ->
-                        passwordConfirm = passwordConfirm.copy(text = value)
+                        signUp =
+                            signUp.copy(
+                                passwordConfirm =
+                                    signUp.passwordConfirm.copy(
+                                        text = value,
+                                    ),
+                            )
                     },
-                    isValid = passwordConfirm.isValid(),
-                    errorMessage = passwordConfirm.errorMessage(),
+                    isValid = signUp.passwordConfirm.isValid(),
+                    errorMessage = signUp.passwordConfirm.errorMessage(),
                     keyboardType = KeyboardType.Password,
                     visualTransformation = PasswordVisualTransformation(),
                 )
