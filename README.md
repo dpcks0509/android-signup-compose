@@ -1,4 +1,4 @@
-# android-signup# android-signup
+# android-signup-compose
 
 ### 1단계 - 컴포즈 기초
 
